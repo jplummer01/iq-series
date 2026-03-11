@@ -38,7 +38,7 @@ Episode folders also include Jupyter notebook cookbooks with hands-on, step-by-s
 
 ### Deploy to Azure
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fmicrosoft%2Fiq-series%2Fmain%2Finfra%2Fazuredeploy.json)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://aka.ms/iq-series/deploytoazure)
 
 Follow the [Episode 1 README](./1-Foundry-IQ-Unlocking-Knowledge-for-Agents/README.md) for step-by-step deployment instructions and to run your first cookbook.
 
