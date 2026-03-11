@@ -351,6 +351,18 @@ resource seedRole_searchIndexContributor 'Microsoft.Authorization/roleAssignment
   }
 }
 
+// Grant the seed identity Cognitive Services User on the OpenAI service
+// (required for knowledge base model validation)
+resource seedRole_cogServicesUser 'Microsoft.Authorization/roleAssignments@2022-04-01' = if (seedData) {
+  name: guid(resourceGroup().id, openAiService.name, 'seed', roles.cognitiveServicesUser)
+  scope: openAiService
+  properties: {
+    principalId: seedData ? seedIdentity.properties.principalId : ''
+    principalType: 'ServicePrincipal'
+    roleDefinitionId: subscriptionResourceId('Microsoft.Authorization/roleDefinitions', roles.cognitiveServicesUser)
+  }
+}
+
 resource seedDataScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = if (seedData) {
   name: '${resourcePrefix}-seed-data'
   location: location
@@ -362,8 +374,9 @@ resource seedDataScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = if 
     }
   }
   properties: {
-    azCliVersion: '2.65.0'
+    azCliVersion: '2.64.0'
     retentionInterval: 'PT1H'
+    cleanupPreference: 'OnSuccess'
     timeout: 'PT15M'
     scriptContent: loadTextContent('scripts/seed-data.sh')
     environmentVariables: [
@@ -378,6 +391,7 @@ resource seedDataScript 'Microsoft.Resources/deploymentScripts@2023-08-01' = if 
   dependsOn: [
     seedRole_searchContributor
     seedRole_searchIndexContributor
+    seedRole_cogServicesUser
     embeddingDeployment
     chatDeployment
   ]

@@ -1,16 +1,16 @@
 #!/bin/bash
 set -e
 
-echo "⏳ Waiting 60 seconds for RBAC role propagation..."
-sleep 60
+echo "⏳ Waiting 90 seconds for RBAC role propagation..."
+sleep 90
 
 echo "📦 Installing Python dependencies..."
-pip install -q azure-search-documents==11.7.0b2 azure-identity requests
+pip install --break-system-packages -q azure-search-documents==11.7.0b2 azure-identity requests
 
 echo "🚀 Running data seed script..."
 python3 <<'PYTHON_SCRIPT'
 import os, json, requests
-from azure.identity import AzureCliCredential
+from azure.identity import DefaultAzureCredential, ManagedIdentityCredential
 from azure.search.documents.indexes import SearchIndexClient
 from azure.search.documents import SearchIndexingBufferedSender
 from azure.search.documents.indexes.models import (
@@ -23,7 +23,7 @@ from azure.search.documents.indexes.models import (
     KnowledgeSourceReference, KnowledgeRetrievalOutputMode,
 )
 
-credential = AzureCliCredential()
+credential = DefaultAzureCredential()
 
 SEARCH_ENDPOINT = os.environ["SEARCH_ENDPOINT"]
 AOAI_ENDPOINT = os.environ["AOAI_ENDPOINT"]
